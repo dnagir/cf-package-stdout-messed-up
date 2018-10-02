@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+
+BUCKET_NAME="$1"
+
+date > code # create new one every time so that it always gets uploaded to S3
+zip -rj code.zip code
+aws cloudformation package --template-file="cf.yaml" --s3-bucket="$BUCKET_NAME" | head

@@ -1,0 +1,32 @@
+Description: Example
+
+Resources:
+  ExampleLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: exampleFunction
+      Handler: hello.handler
+      Timeout: 3 # default is 3s
+      Runtime: nodejs8.10
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code: code.zip
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - apigateway.amazonaws.com
+      Policies:
+        - PolicyName: invoke-lambdas
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: "*"
